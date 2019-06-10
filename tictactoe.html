@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://www.simpledao.com/static/common/fontawesome/fontawesome.css" rel="stylesheet">
+    <link href="https://www.simpledao.com/static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://www.simpledao.com/static/common/css/common.css" rel="stylesheet">
+    <style type="text/css">
+        .ttt-item {
+            text-align: center;
+            width: 150px;
+            height: 150px;
+            font-size: 100px;
+            border: 3px solid black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <div class="container mt-5 d-flex flex-column align-items-center justify-content-center align-content-center">
+        <div class="row my-2">
+            <h4 class="mr-2">Player: O </h4>
+            <select id="player-o">
+                <option value="1">入门</option>
+                <option value="3">普通</option>
+                <option value="6">困难</option>
+                <option value="9">极难</option>
+            </select>
+        </div>
+        <div class="row">
+            <div id="ttt-00" class="ttt-item"></div>
+            <div id="ttt-01" class="ttt-item"></div>
+            <div id="ttt-02" class="ttt-item"></div>
+        </div>
+        <div class="row">
+            <div id="ttt-10" class="ttt-item"></div>
+            <div id="ttt-11" class="ttt-item"></div>
+            <div id="ttt-12" class="ttt-item"></div>
+        </div>
+        <div class="row">
+            <div id="ttt-20" class="ttt-item"></div>
+            <div id="ttt-21" class="ttt-item"></div>
+            <div id="ttt-22" class="ttt-item"></div>
+        </div>
+        <div class="row my-2">
+            <h4 class="mr-2">Player: # </h4>
+            <select id="player-sharp">
+                <option value="1">入门</option>
+                <option value="3">普通</option>
+                <option value="6">困难</option>
+                <option value="9">极难</option>
+            </select>
+        </div>
+        <div class="row my-2">
+            <button id="btn-start">start</button>
+        </div>
+    </div>
+
+
+    <script src="https://www.simpledao.com/static/common/js/jquery.min.js"></script>
+    <script src="https://www.simpledao.com/static/common/js/popper.min.js"></script>
+    <script src="https://www.simpledao.com/static/common/js/bootstrap.min.js"></script>
+    <script src="https://www.simpledao.com/static/common/js/common.js"></script>
+    <script src="minimax.js"></script>
+    <script src="tictactoe.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#ttt-1").text("X");
+            $("#ttt-3").text("O");
+
+            $("#btn-start").click(function () {
+                var ttt = createGameTicTacToe();
+                var xLevel = document.getElementById("player-sharp").value;
+                var playerX = createAIPlayer(ttt.PlayerX, minimax, parseInt(xLevel));
+                var OLevel = document.getElementById("player-o").value;
+                var playerO = createAIPlayer(ttt.PlayerO, minimaxAlphaBeta, parseInt(OLevel));
+
+                console.log("X level:", xLevel, "; O level:", OLevel);
+
+                runStep(ttt, playerX, playerO);
+            });
+        });
+    </script>
+</body>
+
+</html>
