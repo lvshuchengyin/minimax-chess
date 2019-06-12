@@ -28,32 +28,32 @@
         <div class="row my-2">
             <h4 class="mr-2">Player: O </h4>
             <select id="player-o">
-                <option value="1">入门</option>
-                <option value="3">普通</option>
+                <option value="2" selected>入门</option>
+                <option value="4">普通</option>
                 <option value="6">困难</option>
                 <option value="9">极难</option>
             </select>
         </div>
         <div class="row">
-            <div id="ttt-00" class="ttt-item"></div>
-            <div id="ttt-01" class="ttt-item"></div>
-            <div id="ttt-02" class="ttt-item"></div>
+            <div id="ttt-00" ttt-index="00" class="ttt-item"></div>
+            <div id="ttt-01" ttt-index="01" class="ttt-item"></div>
+            <div id="ttt-02" ttt-index="02" class="ttt-item"></div>
         </div>
         <div class="row">
-            <div id="ttt-10" class="ttt-item"></div>
-            <div id="ttt-11" class="ttt-item"></div>
-            <div id="ttt-12" class="ttt-item"></div>
+            <div id="ttt-10" ttt-index="10" class="ttt-item"></div>
+            <div id="ttt-11" ttt-index="11" class="ttt-item"></div>
+            <div id="ttt-12" ttt-index="12" class="ttt-item"></div>
         </div>
         <div class="row">
-            <div id="ttt-20" class="ttt-item"></div>
-            <div id="ttt-21" class="ttt-item"></div>
-            <div id="ttt-22" class="ttt-item"></div>
+            <div id="ttt-20" ttt-index="20" class="ttt-item"></div>
+            <div id="ttt-21" ttt-index="21" class="ttt-item"></div>
+            <div id="ttt-22" ttt-index="22" class="ttt-item"></div>
         </div>
         <div class="row my-2">
-            <h4 class="mr-2">Player: # </h4>
+            <h4 class="mr-2">Player: X </h4>
             <select id="player-sharp">
-                <option value="1">入门</option>
-                <option value="3">普通</option>
+                <option value="2">入门</option>
+                <option value="4" selected>普通</option>
                 <option value="6">困难</option>
                 <option value="9">极难</option>
             </select>
@@ -73,19 +73,31 @@
 
     <script>
         $(document).ready(function () {
-            $("#ttt-1").text("X");
-            $("#ttt-3").text("O");
+            var gameObj;
+
+            $(".ttt-item").click(function() {
+                var index = $(this).attr("ttt-index");
+                var x = index[0];
+                var y = index[1];
+                console.log(x, y);
+                gameObj.chooseMove(x, y);
+            });
 
             $("#btn-start").click(function () {
-                var ttt = createGameTicTacToe();
                 var xLevel = document.getElementById("player-sharp").value;
-                var playerX = createAIPlayer(ttt.PlayerX, minimax, parseInt(xLevel));
                 var OLevel = document.getElementById("player-o").value;
-                var playerO = createAIPlayer(ttt.PlayerO, minimaxAlphaBeta, parseInt(OLevel));
+
+                gameObj = createGameTicTacToe();
+                var playerX = createAIPlayer(gameObj.PlayerTypeX, minimax, parseInt(xLevel));
+                //playerX = createHumanPlayer(gameObj.PlayerTypeX);
+                var playerO = createAIPlayer(gameObj.PlayerTypeO, minimaxAlphaBeta, parseInt(OLevel));
 
                 console.log("X level:", xLevel, "; O level:", OLevel);
-
-                runStep(ttt, playerX, playerO);
+                gameObj.playerX = playerX;
+                gameObj.playerO = playerO;
+                gameObj.playerNow = playerO;
+                gameObj.nextRound();
+                //runStep(gameObj, playerX, playerO);
             });
         });
     </script>

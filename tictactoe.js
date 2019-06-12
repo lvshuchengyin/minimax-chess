@@ -1,15 +1,18 @@
+var PLAYER_TYPE_AI = 0;
+var PLAYER_TYPE_HUMAN = 1;
+
 function createGameTicTacToe() {
 	var obj = {};
 
 	obj.Empty = " ";
-	obj.PlayerX = "X";
-	obj.PlayerO = "O";
-	obj.changePlayer = function (player) {
-		if (player === obj.PlayerX) {
-			return obj.PlayerO;
+	obj.PlayerTypeX = "X";
+	obj.PlayerTypeO = "O";
+	obj.changePlayerType = function (player) {
+		if (player === obj.PlayerTypeX) {
+			return obj.PlayerTypeO;
 		}
 
-		return obj.PlayerX;
+		return obj.PlayerTypeX;
 	};
 
 	obj.board = [
@@ -17,16 +20,6 @@ function createGameTicTacToe() {
 		[0, 0, 0],
 		[0, 0, 0],
 	];
-
-	obj.cloneBoard = function () {
-		var clone = this;
-		clone.board = [
-			[0, 0, 0],
-			[0, 0, 0],
-			[0, 0, 0],
-		];
-		return clone;
-	};
 
 	obj.boardToString = function (board) {
 		var res = "";
@@ -52,7 +45,7 @@ function createGameTicTacToe() {
 			return 1;
 		}
 
-		if (this.isGameOver(board, this.changePlayer(player))) {
+		if (this.isGameOver(board, this.changePlayerType(player))) {
 			return -1;
 		}
 
@@ -88,7 +81,7 @@ function createGameTicTacToe() {
 	};
 
 	obj.isGameOverAll = function (board) {
-		return this.isGameOver(board, this.PlayerX) || this.isGameOver(board, this.PlayerO);
+		return this.isGameOver(board, this.PlayerTypeX) || this.isGameOver(board, this.PlayerTypeO);
 	};
 
 	obj.isEnd = function (board) {
@@ -142,19 +135,82 @@ function createGameTicTacToe() {
 		board[step.x][step.y] = obj.Empty;
 	};
 
+	obj.playerX = null;
+	obj.playerO = null;
+	obj.playerNow = null;
+	obj.nextRound = function () {
+		if (obj.playerNow === obj.playerX) {
+			obj.playerNow = obj.playerO;
+		} else {
+			obj.playerNow = obj.playerX
+		}
+
+		obj.playerNow.moveStep(obj);
+
+		obj.renderBoard(obj.board);
+
+		if (obj.isGameOverAll(obj.board) || obj.isEnd(obj.board)) {
+			return;
+		}
+
+		if (obj.playerNow.isAI) {
+			setTimeout(obj.nextRound, 1000);
+			return;
+		}
+	};
+
+	obj.chooseMove = function (x, y) {
+		if (obj.playerNow.isAI) {
+			return;
+		}
+
+		var step = {
+			"x": x,
+			"y": y
+		};
+
+		if (!obj.validMove(obj.board, step)) {
+			return;
+		}
+
+		obj.move(obj.board, step, obj.playerNow.info);
+
+		obj.renderBoard(obj.board);
+
+		if (obj.isGameOverAll(obj.board) || obj.isEnd(obj.board)) {
+			return;
+		}
+
+		obj.nextRound();
+	};
+
 	return obj;
 }
 
 function createAIPlayer(info, algorithm, depth) {
 	var obj = {}
+	obj.isAI = true;
 	obj.info = info;
 	obj.depth = depth;
 	obj.algorithm = algorithm;
+	obj.moveStep = function (gameObj) {
+		var res = obj.algorithm(gameObj, gameObj.board, obj.depth, obj.info, true);
+		var step = res.step;
+		var score = res.score;
+		console.log("AI", obj.info, res.stepCount, step, score);
+		gameObj.move(gameObj.board, step, obj.info);
+	};
 	return obj;
 }
 
+function createHumanPlayer(info) {
+	var obj = {}
+	obj.info = info;
+	obj.moveStep = function (gameObj) {
 
-
+	};
+	return obj;
+}
 
 var turn = 0;
 
