@@ -47,7 +47,7 @@ function minimax(game, board, depth, player, isMaxPlayer) {
 
 			var movePlayer = player;
 			if (!isMaxPlayer) {
-				movePlayer = game.changePlayerType(player);
+				movePlayer = game.changePlayer(player);
 			}
 			game.move(board, step, movePlayer);
 
@@ -117,7 +117,7 @@ function minimaxAlphaBeta(game, board, depth, player, isMaxPlayer) {
 
 			var movePlayer = player;
 			if (!isMaxPlayer) {
-				movePlayer = game.changePlayerType(player);
+				movePlayer = game.changePlayer(player);
 			}
 			game.move(board, step, movePlayer);
 

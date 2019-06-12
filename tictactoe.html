@@ -28,10 +28,10 @@
         <div class="row my-2">
             <h4 class="mr-2">Player: O </h4>
             <select id="player-o">
-                <option value="2" selected>入门</option>
-                <option value="4">普通</option>
-                <option value="6">困难</option>
-                <option value="9">极难</option>
+                <option value="0">玩家</option>
+                <option value="2" selected>AI普通</option>
+                <option value="5">AI中等</option>
+                <option value="8">AI困难</option>
             </select>
         </div>
         <div class="row">
@@ -51,11 +51,11 @@
         </div>
         <div class="row my-2">
             <h4 class="mr-2">Player: X </h4>
-            <select id="player-sharp">
-                <option value="2">入门</option>
-                <option value="4" selected>普通</option>
-                <option value="6">困难</option>
-                <option value="9">极难</option>
+            <select id="player-x">
+                    <option value="0" selected>玩家</option>
+                    <option value="2">AI普通</option>
+                    <option value="5">AI中等</option>
+                    <option value="8">AI困难</option>
             </select>
         </div>
         <div class="row my-2">
@@ -69,6 +69,7 @@
     <script src="https://www.simpledao.com/static/common/js/bootstrap.min.js"></script>
     <script src="https://www.simpledao.com/static/common/js/common.js"></script>
     <script src="minimax.js"></script>
+    <script src="player.js"></script>
     <script src="tictactoe.js"></script>
 
     <script>
@@ -84,20 +85,26 @@
             });
 
             $("#btn-start").click(function () {
-                var xLevel = document.getElementById("player-sharp").value;
-                var OLevel = document.getElementById("player-o").value;
-
                 gameObj = createGameTicTacToe();
-                var playerX = createAIPlayer(gameObj.PlayerTypeX, minimax, parseInt(xLevel));
-                //playerX = createHumanPlayer(gameObj.PlayerTypeX);
-                var playerO = createAIPlayer(gameObj.PlayerTypeO, minimaxAlphaBeta, parseInt(OLevel));
 
-                console.log("X level:", xLevel, "; O level:", OLevel);
-                gameObj.playerX = playerX;
-                gameObj.playerO = playerO;
-                gameObj.playerNow = playerO;
+                var xLevel = document.getElementById("player-x").value;
+                if (xLevel == "0") {
+                    gameObj.playerX = createHumanPlayer(gameObj.XText);
+                } else {
+                    gameObj.playerX = createAIPlayer(gameObj.XText, minimaxAlphaBeta, parseInt(xLevel));
+                }
+                
+                var oLevel = document.getElementById("player-o").value;
+                if (oLevel == "0") {
+                    gameObj.playerO = createHumanPlayer(gameObj.OText);
+                } else {
+                    gameObj.playerO = createAIPlayer(gameObj.OText, minimaxAlphaBeta, parseInt(oLevel));
+                }
+
+                console.log("X level:", xLevel, "; O level:", oLevel);
+
+                gameObj.playerNow = gameObj.playerX;
                 gameObj.nextRound();
-                //runStep(gameObj, playerX, playerO);
             });
         });
     </script>
