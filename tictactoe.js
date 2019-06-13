@@ -21,7 +21,8 @@ function createGameTicTacToe() {
 		return res;
 	};
 
-	obj.renderBoard = function (board) {
+	obj.renderBoard = function () {
+		var board = obj.board;
 		for (var x = 0; x < 3; x++) {
 			for (var y = 0; y < 3; y++) {
 				var v = board[x][y];
@@ -31,18 +32,18 @@ function createGameTicTacToe() {
 	}
 
 	obj.evalute = function (board, player) {
-		if (this.isGameOver(board, player)) {
+		if (this.isWin(board, player)) {
 			return 1;
 		}
 
-		if (this.isGameOver(board, this.changePlayer(player))) {
+		if (this.isWin(board, this.changePlayer(player))) {
 			return -1;
 		}
 
 		return 0;
 	};
 
-	obj.isGameOver = function (board, player) {
+	obj.isWin = function (board, player) {
 		var win_board = [
 			[board[0][0], board[0][1], board[0][2]],
 			[board[1][0], board[1][1], board[1][2]],
@@ -70,12 +71,12 @@ function createGameTicTacToe() {
 		return false;
 	};
 
-	obj.isGameOverAll = function (board) {
-		return obj.isGameOver(board, obj.playerX) || obj.isGameOver(board, obj.playerO);
+	obj.isWinAll = function (board) {
+		return obj.isWin(board, obj.playerX) || obj.isWin(board, obj.playerO);
 	};
 
 	obj.isEnd = function (board) {
-		if (obj.isGameOverAll(board)) {
+		if (obj.isWinAll(board)) {
 			return true;
 		}
 
@@ -95,6 +96,17 @@ function createGameTicTacToe() {
 		}
 
 		return false;
+	};
+
+	obj.showEnd = function () {
+		console.log("end");
+		var text = "平局";
+		if (obj.isWin(obj.board, obj.playerO)) {
+			text = "胜者: O";
+		} else if (obj.isWin(obj.board, obj.playerX)) {
+			text = "胜者: X";
+		}
+		$("#top-tip").text(text);
 	};
 
 	obj.availableSteps = function (board) {
@@ -132,27 +144,29 @@ function createGameTicTacToe() {
 	obj.playerX = null;
 	obj.playerO = null;
 	obj.playerNow = null;
-	obj.changePlayer = function(player) {
+	obj.changePlayer = function (player) {
 		if (obj.playerX === player) {
 			return obj.playerO;
 		}
 		return obj.playerX;
 	};
+
 	obj.nextRound = function () {
-		console.log(obj.boardToString(obj.board))
 		if (obj.isEnd(obj.board)) {
-			console.log("end");
+			obj.showEnd();
 			return;
 		}
-		
+
 		obj.playerNow = obj.changePlayer(obj.playerNow);
+		var text = "轮到: " + obj.playerNow.info;
+		$("#top-tip").text(text);
 
 		obj.playerNow.moveStep(obj);
 
-		obj.renderBoard(obj.board);
+		obj.renderBoard();
 
 		if (obj.isEnd(obj.board)) {
-			console.log("end");
+			obj.showEnd();
 			return;
 		}
 
@@ -181,7 +195,7 @@ function createGameTicTacToe() {
 		}
 
 		obj.move(obj.board, step, obj.playerNow);
-		obj.renderBoard(obj.board);
+		obj.renderBoard();
 
 		obj.nextRound();
 	};

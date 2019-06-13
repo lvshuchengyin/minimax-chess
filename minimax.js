@@ -32,7 +32,7 @@ function minimax(game, board, depth, player, isMaxPlayer) {
 			};
 		}
 
-		if (depth == 0 || game.isGameOverAll(board) || game.isEnd(board)) {
+		if (depth == 0 || game.isEnd(board)) {
 			var score = game.evalute(board, player);
 			return {
 				"step": {},
@@ -102,8 +102,8 @@ function minimaxAlphaBeta(game, board, depth, player, isMaxPlayer) {
 			};
 		}
 
-		if (depth == 0 || game.isGameOverAll(board) || game.isEnd(board)) {
-			var score = game.evalute(board, player);
+		if (depth == 0 || game.isEnd(board)) {
+			var score = game.evalute(board, player) * (depth + 1);
 			return {
 				"step": {},
 				"score": score

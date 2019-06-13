@@ -13,11 +13,16 @@
     <style type="text/css">
         .ttt-item {
             text-align: center;
-            width: 150px;
-            height: 150px;
-            font-size: 100px;
-            border: 3px solid black;
+            width: 100px;
+            height: 100px;
+            font-size: 50px;
+            border: 2px solid black;
             cursor: pointer;
+        }
+
+        #top-tip {
+            font-size: 30px;
+            color: green;
         }
     </style>
 </head>
@@ -25,6 +30,9 @@
 <body class="bg-light">
 
     <div class="container mt-5 d-flex flex-column align-items-center justify-content-center align-content-center">
+        <div class="my-1">
+            <p id="top-tip"> </p>
+        </div>
         <div class="row my-2">
             <h4 class="mr-2">Player: O </h4>
             <select id="player-o">
@@ -52,10 +60,10 @@
         <div class="row my-2">
             <h4 class="mr-2">Player: X </h4>
             <select id="player-x">
-                    <option value="0" selected>玩家</option>
-                    <option value="2">AI普通</option>
-                    <option value="5">AI中等</option>
-                    <option value="8">AI困难</option>
+                <option value="0" selected>玩家</option>
+                <option value="2">AI普通</option>
+                <option value="5">AI中等</option>
+                <option value="8">AI困难</option>
             </select>
         </div>
         <div class="row my-2">
@@ -74,17 +82,26 @@
 
     <script>
         $(document).ready(function () {
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var cellWidth = (Math.min(windowWidth, windowHeight) - 50) / 3;
+            cellWidth = Math.min(cellWidth, 150);
+            $(".ttt-item").css("width", cellWidth);
+            $(".ttt-item").css("height", cellWidth);
+            $(".ttt-item").css("font-size", cellWidth / 1.7);
+
             var gameObj;
 
-            $(".ttt-item").click(function() {
+            $(".ttt-item").click(function () {
                 var index = $(this).attr("ttt-index");
                 var x = index[0];
                 var y = index[1];
-                console.log(x, y);
                 gameObj.chooseMove(x, y);
             });
 
             $("#btn-start").click(function () {
+                $("#top-tip").text(" ");
+
                 gameObj = createGameTicTacToe();
 
                 var xLevel = document.getElementById("player-x").value;
@@ -93,7 +110,7 @@
                 } else {
                     gameObj.playerX = createAIPlayer(gameObj.XText, minimaxAlphaBeta, parseInt(xLevel));
                 }
-                
+
                 var oLevel = document.getElementById("player-o").value;
                 if (oLevel == "0") {
                     gameObj.playerO = createHumanPlayer(gameObj.OText);
@@ -106,6 +123,8 @@
                 gameObj.playerNow = gameObj.playerX;
                 gameObj.nextRound();
             });
+
+            $("#btn-start").click();
         });
     </script>
 </body>
